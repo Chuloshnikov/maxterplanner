@@ -1,19 +1,13 @@
 import Link from "next/link";
-import ThemeToggle from "../theme/theme-toogle";
+import ThemeToggle from "@/components/theme/theme-toogle";
+import LogoLink from "@/components/logo/logo-link";
 
 
 const Header = () => {
   return (
     <div className="w-full sticky">
       <div className="py-4 px-2 flex items-center justify-between">
-        <h1 className="text-4xl font-bold flex flex-col">
-            <div className="text-2xl md:text-4xl font-bold">
-                Ma<span className="maxter-text">X</span>ter
-            </div>
-            <div className="-mt-3 text-xl md:text-3xl">
-                Planner
-            </div>
-        </h1>
+       <LogoLink link={"/"}/>
         <div className="flex gap-2 items-center">
           <button>
               <Link href={"/login"}
