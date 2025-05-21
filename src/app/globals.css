@@ -124,6 +124,6 @@
 }
 
 .maxter-bg {
-   @apply bg-[#3DB4FF];
+   @apply bg-[#3DB4FF] hover:opacity-90 duration-200 cursor-pointer;
 }
 

@@ -9,9 +9,9 @@ const Header = () => {
       <div className="py-4 px-2 flex items-center justify-between">
        <LogoLink link={"/"}/>
         <div className="flex gap-2 items-center">
-          <button>
+          <button className="maxter-bg">
               <Link href={"/login"}
-                className="maxter-bg text-white px-4 py-[11px] rounded-md hover:bg-blue-600 transition duration-200 ease-in-out">
+                className="maxter-bg text-white px-4 py-2 rounded-md transition duration-200 ease-in-out">
                 Login
               </Link>
           </button>
