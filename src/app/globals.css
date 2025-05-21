@@ -119,3 +119,11 @@
   }
 }
 
+.maxter-text {
+  @apply text-[#3DB4FF];
+}
+
+.maxter-bg {
+   @apply bg-[#3DB4FF];
+}
+
