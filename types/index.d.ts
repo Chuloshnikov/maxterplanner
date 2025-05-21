@@ -1,3 +1,12 @@
+export interface FormTypes {
+    name?: string
+    email: string;
+    password: string;
+}
+
+type FormType = "sign-in" | "sign-up";
+
+
 type Post = {
     id: number;
     userId: number;

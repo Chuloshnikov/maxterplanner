@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import React from 'react'
 
-const LogoLink = () => {
+const LogoLink = ({ link }: {link: string}) => {
   return (
-    <Link href={"/"}>
+    <Link href={link}>
      <h1 className="text-4xl font-bold flex flex-col">
         <div className="text-2xl md:text-3xl font-bold">
             Ma<span className="maxter-text">X</span>ter
