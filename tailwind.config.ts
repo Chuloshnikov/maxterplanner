@@ -23,6 +23,9 @@ const config: Config = {
         xl: "1280px",
         "2x1": "1400px",
       },
+      boxShadow: {
+        bannerShadow: "0 1px 2px 1px #00000026"
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
