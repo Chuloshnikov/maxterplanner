@@ -2,7 +2,19 @@
 
 import { useAuthUser } from "@/hooks/useAuth";
 
+
 export default function Notes() {
+  return (
+    <div>
+      dfgfgfg
+    </div>
+  )
+}
+
+
+
+{/*
+  export default function Notes() {
   const { user, isLoading } = useAuthUser();
 
   if (isLoading) return <p>Загрузка...</p>;
@@ -10,3 +22,7 @@ export default function Notes() {
 
   return <h1>Привет, {user.fullName}</h1>;
 }
+  
+  
+  */}
+
