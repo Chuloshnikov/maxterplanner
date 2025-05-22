@@ -12,22 +12,16 @@ import { toast } from "sonner";
 import { FormType } from "../../../types";
 import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
 
 
 
 const AuthForm = ({ type }: {type: FormType}) => {
-    const router = useRouter();
     const formSchema = authFormSchema(type);
 
-    const authUser = undefined;
+    
 
-     useEffect(() => {
-    if (authUser) {
-      router.push('/');
-    }
-  }, [authUser]);
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,7 +44,7 @@ const AuthForm = ({ type }: {type: FormType}) => {
           router.push('/sign-in');
         }
       } else {
-        //await logIn(values);
+        //await signIn(values);
         if (authUser) {
           toast.success("Signed in successfully!");
           router.push('/');

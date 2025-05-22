@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { checkAuth } from "@/lib/auth";
+import { getServerAuthUser } from "@/lib/auth/server";
 
 export default async function NotesLayout({ children }: { children: React.ReactNode }) {
-  const user = await checkAuth();
-
+  const user = await getServerAuthUser();
+  
   if (!user) {
     redirect("/sign-in");
   }

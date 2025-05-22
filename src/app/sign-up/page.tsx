@@ -1,8 +1,10 @@
 import AuthForm from '@/components/auth/auth-form'
 import Link from 'next/link'
+
 import React from 'react'
 
-export default function SignUp() {
+export default async function SignUp() {
+
   return (
     <div className='max-w-4xl mx-auto px-4 h-screen w-screen mt-20'>
        <div className='flex flex-col items-center justify-center mt-10'>
