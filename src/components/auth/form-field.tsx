@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-// Define the props interface with a generic type T
+
 interface FormFieldProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
@@ -17,7 +17,6 @@ interface FormFieldProps<T extends FieldValues> {
   type?: "text" | "email" | "password" | "file";
 }
 
-// Explicitly declare the generic type T for the component
 function FormField<T extends FieldValues>({
   control,
   name,
@@ -31,7 +30,7 @@ function FormField<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-gray-600">{label}</FormLabel>
+          <FormLabel className="text-gray-500">{label}</FormLabel>
           <FormControl>
             <Input
               className="input"
