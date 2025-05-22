@@ -3,7 +3,7 @@ import React from 'react'
 
 const LogoLink = ({ link }: {link: string}) => {
   return (
-    <Link href={link}>
+    <Link href={link} className="hover:opacity-90 duration-200">
      <h1 className="text-4xl font-bold flex flex-col">
         <div className="text-2xl md:text-3xl font-bold">
             Ma<span className="maxter-text">X</span>ter

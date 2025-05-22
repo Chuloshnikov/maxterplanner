@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/theme/theme-toogle";
 import LogoLink from "@/components/logo/logo-link";
+import { Button } from "../ui/button";
 
 
 const Header = () => {
@@ -9,12 +10,12 @@ const Header = () => {
       <div className="py-4 px-2 flex items-center justify-between">
        <LogoLink link={"/"}/>
         <div className="flex gap-2 items-center">
-          <button className="maxter-bg">
+          <Button className="maxter-bg">
               <Link href={"/login"}
-                className="maxter-bg text-white px-4 py-2 rounded-md transition duration-200 ease-in-out">
+                className="maxter-bg px-4 py-2 rounded-md transition duration-200 ease-in-out">
                 Login
               </Link>
-          </button>
+          </Button>
         <ThemeToggle/>
         </div>
        

@@ -1,25 +1,35 @@
 "use client"
- 
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
- 
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { FormType } from "../../../types";
 import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 
 
 const AuthForm = ({ type }: {type: FormType}) => {
+    const router = useRouter();
     const formSchema = authFormSchema(type);
 
-     const form = useForm<z.infer<typeof formSchema>>({
+    const authUser = undefined;
+
+     useEffect(() => {
+    if (authUser) {
+      router.push('/');
+    }
+  }, [authUser]);
+
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
         username: "",
@@ -27,36 +37,40 @@ const AuthForm = ({ type }: {type: FormType}) => {
         password: ""
         },
     })
- 
+
 
     
-        async function onSubmit(values: z.infer<typeof formSchema>) {
-            {/*
-                try {
-                    if (type === 'sign-up') {
-                        await signUp(values);
-                        if (authUser) {
-                        toast.success("Account created successfully!");
-                        navigate('/sign-in');
-                        }
-                } else {
-                    await logIn(values);
-                    if (authUser) {
-                        toast.success("Signed in successfully!");
-                        navigate('/');
-                    }
-                }
-                } catch (error: any) {
-                    console.error(error);
-                    toast.error(`There was an error: ${error.message || error}`);
-                }
-              */}
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    try {
+      if (type === 'sign-up') {
+        //await signUp(values);
+        if (authUser) {
+          toast.success("Account created successfully!");
+          router.push('/sign-in');
         }
+      } else {
+        //await logIn(values);
+        if (authUser) {
+          toast.success("Signed in successfully!");
+          router.push('/');
+        }
+      }
+    } catch (error: unknown) {
+      console.error(error);
+
+      if (error instanceof Error) {
+        toast.error(`There was an error: ${error.message}`);
+      } else {
+        toast.error("There was an unknown error.");
+      }
+    }
+  }
 
     const isSignIn = type === 'sign-in';
 
   return (
-     <Form {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {!isSignIn && (
                 <FormField
@@ -71,7 +85,7 @@ const AuthForm = ({ type }: {type: FormType}) => {
                 name="email" 
                 label="email"
                 placeholder="email" 
-                 type="email" 
+                type="email" 
                 />
                   <FormField
                 control={form.control} 
