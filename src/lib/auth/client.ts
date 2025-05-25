@@ -10,7 +10,7 @@ export const signOut = async () => {
   return res.data;
 };
 
-export const signUp = async (data: { fullName: string; email: string; password: string }) => {
+export const signUp = async (data: { username: string; email: string; password: string }) => {
   const res = await axiosInstance.post("/auth/sign-up", data);
   return res.data;
 };

@@ -1,9 +1,16 @@
 import AuthForm from '@/components/auth/auth-form'
+import { getServerAuthUser } from '@/lib/auth/server';
 import Link from 'next/link'
+import { redirect } from 'next/navigation';
 
 import React from 'react'
 
 export default async function SignUp() {
+  const authUser = await getServerAuthUser();
+  
+  if (authUser) {
+    redirect("/notes");
+  }
 
   return (
     <div className='max-w-4xl mx-auto px-4 h-screen w-screen mt-20'>
