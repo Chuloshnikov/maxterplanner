@@ -5,7 +5,7 @@ export default async function NotesLayout({ children }: { children: React.ReactN
   const user = await getServerAuthUser();
   
   if (!user) {
-    redirect("/sign-in");
+    redirect("/login");
   }
 
   return <>{children}</>;

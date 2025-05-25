@@ -12,88 +12,83 @@ import { toast } from "sonner";
 import { FormType } from "../../../types";
 import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
+import { useRouter } from "next/navigation";
+import { useSignIn, useSignUp } from "@/hooks/useAuth";
 
 
 
 
-const AuthForm = ({ type }: {type: FormType}) => {
-    const formSchema = authFormSchema(type);
+const AuthForm = ({ type }: { type: FormType }) => {
+  const formSchema = authFormSchema(type);
+  const router = useRouter();
 
-    
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
 
+  const { mutateAsync: signIn } = useSignIn();
+  const { mutateAsync: signUp } = useSignUp();
 
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-        username: "",
-        email: "",
-        password: ""
-        },
-    })
-
-
-    
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      if (type === 'sign-up') {
-        //await signUp(values);
-        if (authUser) {
-          toast.success("Account created successfully!");
-          router.push('/sign-in');
-        }
+      if (type === "sign-up") {
+        await signUp(values);
+        toast.success("Account created successfully!");
+        router.push("/login");
       } else {
-        //await signIn(values);
-        if (authUser) {
-          toast.success("Signed in successfully!");
-          router.push('/');
-        }
+        await signIn(values);
+        toast.success("Signed in successfully!");
+        router.push("/");
       }
     } catch (error: unknown) {
       console.error(error);
 
-      if (error instanceof Error) {
-        toast.error(`There was an error: ${error.message}`);
+      if (error instanceof Error && "response" in error) {
+        toast.error((error as any).response?.data?.message || error.message);
       } else {
         toast.error("There was an unknown error.");
       }
     }
   }
 
-    const isSignIn = type === 'sign-in';
+  const isSignIn = type === "sign-in";
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            {!isSignIn && (
-                <FormField
-                control={form.control} 
-                name="username" 
-                label="username"
-                placeholder="username" 
-                />
-            )}
-              <FormField
-                control={form.control} 
-                name="email" 
-                label="email"
-                placeholder="email" 
-                type="email" 
-                />
-                  <FormField
-                control={form.control} 
-                name="password" 
-                label="password"
-                placeholder="password" 
-                type="password" 
-                />
-                <Button className="maxter-bg" type="submit">
-                    {isSignIn ? 'Sign in' : 'Create Account'}
-                </Button>
+        {!isSignIn && (
+          <FormField
+            control={form.control}
+            name="username"
+            label="username"
+            placeholder="username"
+          />
+        )}
+        <FormField
+          control={form.control}
+          name="email"
+          label="email"
+          placeholder="email"
+          type="email"
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          label="password"
+          placeholder="password"
+          type="password"
+        />
+        <Button className="maxter-bg" type="submit">
+          {isSignIn ? "Sign in" : "Create Account"}
+        </Button>
       </form>
     </Form>
-  )
-}
+  );
+};
 
 export default AuthForm;
