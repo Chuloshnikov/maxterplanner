@@ -14,6 +14,7 @@ import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
 import { useRouter } from "next/navigation";
 import { useSignIn, useSignUp } from "@/hooks/useAuth";
+import { AxiosError } from "axios";
 
 
 
@@ -49,8 +50,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
     } catch (error: unknown) {
       console.error(error);
 
-      if (error instanceof Error && "response" in error) {
-        toast.error((error as any).response?.data?.message || error.message);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || error.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("There was an unknown error.");
       }
