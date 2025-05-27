@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const jwt = req.cookies.get("jwt");
-  console.log("🧠 middleware active — JWT:", jwt?.value);
+  //console.log("🧠 middleware active — JWT:", jwt?.value);
 
   const { pathname } = req.nextUrl;
   const isProtectedRoute = pathname.startsWith("/notes");

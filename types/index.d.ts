@@ -1,5 +1,5 @@
 export interface FormTypes {
-    username?: string
+    username?: string | undefined
     email: string;
     password: string;
 }
