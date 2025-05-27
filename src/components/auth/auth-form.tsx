@@ -35,15 +35,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const { mutateAsync: signUp } = useSignUp();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { username, email, password } = values;
     try {
       if (type === "sign-up") {
-        await signUp(values);
+        await signUp({ username: username!, email, password });
         toast.success("Account created successfully!");
-        router.push("/login");
+        window.location.reload()
       } else {
-        await signIn(values);
+        await signIn({email, password});
         toast.success("Signed in successfully!");
-        router.push("/");
+        window.location.reload()
       }
     } catch (error: unknown) {
       console.error(error);

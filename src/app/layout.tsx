@@ -5,6 +5,9 @@ import Header from "@/components/header/header";
 import { ThemeProvider } from "@/components/theme/theme-context";
 import Providers from "./providers";
 
+import { Toaster } from 'sonner';
+import { getServerAuthUser } from "@/lib/auth/server";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,19 +24,20 @@ export const metadata: Metadata = {
   description: "Maxter Planner. Task manager for IT minds and more.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const authUser = await getServerAuthUser();
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased container mx-auto`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased container mx-auto`}>
+        <Toaster />
         <Providers>
           <ThemeProvider>
-            <Header/>
+            <Header authUser={authUser} />
             {children}
           </ThemeProvider>
         </Providers>
