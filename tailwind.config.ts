@@ -29,6 +29,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        heroColorLight:"#F7F9FD",
+        heroColorDark: '#121212'
       },
     },
   },

@@ -11,7 +11,7 @@ type Props = {
 
 const Header = ({ authUser }: Props) => {
   return (
-    <header className="w-full sticky top-0 z-50 border-b">
+    <header className="w-full sticky top-0 z-50 border-b backdrop-blur-sm">
       <nav className="py-4 px-2 flex items-center justify-between">
         <LogoLink link={"/"} />
 
