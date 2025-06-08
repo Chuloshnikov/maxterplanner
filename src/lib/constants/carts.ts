@@ -1,13 +1,4 @@
-
-export interface CardTypes {
-    title: string;
-    description: string;
-    iconName: string;
-    bgColor: string;
-    iconColor: string;
-}
-
-export const CARTS: CardTypes[] = [
+export const CARTS = [
   {
     title: "Smart planning",
     description: "Create tasks with priorities, deadlines and automatic reminders",

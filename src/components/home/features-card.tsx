@@ -1,16 +1,10 @@
 import { BarChart3, Calendar, CheckCircle, Shield, Smartphone, Users } from 'lucide-react';
 import React from 'react';
+import { CardProps } from '../../../types';
 
 
-interface CardProps {
-    title: string;
-    description: string;
-    iconName: string;
-    bgColor: string;
-    iconColor: string;
-}
 
-const Card = ({ title, description, iconName, bgColor, iconColor }: CardProps) => {
+const FeaturesCard = ({ title, description, iconName, bgColor, iconColor }: CardProps) => {
 
     function getIconByName(iconName: string, iconColor: string) {
         switch (iconName) {
@@ -44,4 +38,4 @@ const Card = ({ title, description, iconName, bgColor, iconColor }: CardProps) =
   )
 }
 
-export default Card;
+export default FeaturesCard;

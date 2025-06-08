@@ -4,6 +4,16 @@ export interface FormTypes {
     password: string;
 }
 
+export interface CardProps {
+      title: string;
+      description: string;
+      iconName: string;
+      bgColor: string;
+      iconColor: string;
+}
+
+
+
 type FormType = "sign-in" | "sign-up";
 
 
@@ -31,3 +41,6 @@ interface Comment {
       id: number;
     };
   }
+
+  
+  
