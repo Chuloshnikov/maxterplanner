@@ -1,4 +1,4 @@
-import FeaturesCard from './features-card';
+import FeaturesCard from '../cards/features-card';
 import { CARTS, CardTypes } from "@/lib/constants/carts"
 
 const FeaturesSection = () => {

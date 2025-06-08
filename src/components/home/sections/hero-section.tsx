@@ -1,8 +1,8 @@
 "use client"
 
 import { BarChart3 } from 'lucide-react';
-import { useTheme } from '../theme/theme-context';
-import { Button } from '../ui/button';
+import { useTheme } from '../../theme/theme-context';
+import { Button } from '../../ui/button';
 import Link from 'next/link';
 
 const HeroSection = () => {

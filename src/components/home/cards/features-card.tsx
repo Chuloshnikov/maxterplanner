@@ -1,6 +1,6 @@
 import { BarChart3, Calendar, CheckCircle, Shield, Smartphone, Users } from 'lucide-react';
 import React from 'react';
-import { CardProps } from '../../../types';
+import { CardProps } from '../../../../types';
 
 
 

@@ -1,6 +1,6 @@
 
 import React from 'react'
-import IconTextCard from './icon-text-card';
+import IconTextCard from '../cards/icon-text-card';
 import { BENEFITS } from '@/lib/constants/benefits';
 
 const BenefitsSection = () => {
