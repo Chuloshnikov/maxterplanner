@@ -1,4 +1,4 @@
-import Card from './card';
+import FeaturesCard from './features-card';
 import { CARTS, CardTypes } from "@/lib/constants/carts"
 
 const FeaturesSection = () => {
@@ -13,7 +13,7 @@ const FeaturesSection = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {CARTS.map((card: CardTypes, index: number) => (
-              <Card  
+              <FeaturesCard  
                 key={index}
                 title={card.title}
                 description={card.description}
