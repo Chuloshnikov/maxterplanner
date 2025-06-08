@@ -1,6 +1,6 @@
 import { Clock, Users, Zap, BarChart3, Calendar, Smartphone, Shield } from "lucide-react";
 import { FC } from "react";
-import { CardProps } from "../../../types";
+import { CardProps } from "../../../../types";
 
 const getIconByName = (iconName: string, iconColor: string) => {
   const className = `w-4 h-4 ${iconColor}`;
