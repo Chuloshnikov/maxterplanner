@@ -45,6 +45,7 @@ import {
   Users,
   Link,
 } from "lucide-react"
+import PlatformNavigation from "@/components/dashboard/platform-navigation"
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([
@@ -119,82 +120,12 @@ export default function DashboardPage() {
   const completionRate = Math.round((completedTasks / totalTasks) * 100)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <div className="text-2xl font-bold">
-                <span className="text-slate-900">Ma</span>
-                <span className="text-blue-600">X</span>
-                <span className="text-slate-900">ter</span>
-              </div>
-              <span className="text-slate-600 font-medium">Planner</span>
-            </div>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Button variant="ghost" className="text-blue-600 bg-blue-50">
-                account
-              </Button>
-              <Button variant="ghost" className="text-slate-600">
-                Проекты
-              </Button>
-              <Button variant="ghost" className="text-slate-600">
-                <Link href="/calendar">
-                    Календарь
-                </Link>
-              </Button>
-              <Button variant="ghost" className="text-slate-600">
-                Команда
-              </Button>
-            </nav>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Bell className="w-4 h-4" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Пользователь" />
-                    <AvatarFallback>АП</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Алексей Петров</p>
-                    <p className="text-xs leading-none text-muted-foreground">alex@example.com</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Профиль</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Настройки</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Выйти</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-br">
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Добро пожаловать, Алексей! 👋</h1>
-          <p className="text-slate-600">Вот что происходит с вашими проектами сегодня</p>
+          <h1 className="text-3xl font-bold text-slate-500 mb-2">Welcome, Max!👋</h1>
+          <p className="text-slate-600">Here&apos;s what&apos;s happening with your projects today</p>
         </div>
 
         {/* Stats Cards */}

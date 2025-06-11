@@ -2,7 +2,6 @@
 
 import { DoorClosed } from "lucide-react";
 import { signOut } from "@/lib/auth/client";
-import { redirect } from "next/navigation";
 
 const LogOutButton = () => {
 

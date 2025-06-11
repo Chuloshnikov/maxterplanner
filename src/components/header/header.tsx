@@ -18,11 +18,8 @@ const Header = ({ authUser }: Props) => {
         <div className="flex gap-1 lg:gap-3 items-center">
           {authUser ? (
             <>
-              <Link href="/notes" className="maxter-bg px-4 py-1.5 rounded-md text-white">
+              <Link href="/account" className="maxter-bg px-4 py-1.5 rounded-md text-white">
                 Notes
-              </Link>
-              <Link href="/account" className="maxter-bg px-2 py-1.5 rounded-md text-white">
-                <SquareUser/>
               </Link>
               <LogOutButton/>
             </>
