@@ -43,6 +43,7 @@ import {
   Target,
   TrendingUp,
   Users,
+  Link,
 } from "lucide-react"
 
 export default function DashboardPage() {
@@ -133,13 +134,15 @@ export default function DashboardPage() {
             </div>
             <nav className="hidden md:flex items-center space-x-6">
               <Button variant="ghost" className="text-blue-600 bg-blue-50">
-                Дашборд
+                account
               </Button>
               <Button variant="ghost" className="text-slate-600">
                 Проекты
               </Button>
               <Button variant="ghost" className="text-slate-600">
-                Календарь
+                <Link href="/calendar">
+                    Календарь
+                </Link>
               </Button>
               <Button variant="ghost" className="text-slate-600">
                 Команда
