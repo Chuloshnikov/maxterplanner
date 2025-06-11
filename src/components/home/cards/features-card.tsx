@@ -1,10 +1,15 @@
+"use client"
 import { BarChart3, Calendar, CheckCircle, Shield, Smartphone, Users } from 'lucide-react';
 import React from 'react';
 import { CardProps } from '../../../../types';
+import { useTheme } from '@/components/theme/theme-context';
 
 
 
 const FeaturesCard = ({ title, description, iconName, bgColor, iconColor }: CardProps) => {
+    const { theme } = useTheme();
+
+    
 
     function getIconByName(iconName: string, iconColor: string) {
         switch (iconName) {
@@ -26,7 +31,7 @@ const FeaturesCard = ({ title, description, iconName, bgColor, iconColor }: Card
     }
 
   return (
-    <div className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+    <div className={`rounded-xl ${theme === 'light' ? "" : "maxter-bg"} shadow-lg hover:shadow-xl transition-shadow`}>
         <div className='p-6 rounded-2xl flex flex-col gap-2'>
             <div className={`w-12 h-12 ${bgColor} rounded-lg flex items-center justify-center mb-4`}>
                 {getIconByName(iconName, iconColor)}

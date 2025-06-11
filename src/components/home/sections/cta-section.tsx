@@ -11,13 +11,15 @@ const CtaSection = () => {
             Join thousands of users who have already optimized their work with MaXter Planner
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 cursor-pointer">
+            <Button 
+            size="lg" 
+            className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 cursor-pointer">
+            
               Start for free
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="border-white text-blue-600 hover:bg-blue-600 hover:text-white text-lg px-8 py-3 cursor-pointer"
+              className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 cursor-pointer"
             >
               <Link href="https://maxter-blog.vercel.app/contacts" className=''>
                 Contact us
