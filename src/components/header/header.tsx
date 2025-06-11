@@ -12,7 +12,7 @@ type Props = {
 const Header = ({ authUser }: Props) => {
   return (
     <header className="w-full sticky top-0 z-50 border-b backdrop-blur-sm">
-      <nav className="py-4 px-2 flex items-center justify-between">
+      <nav className="p-4 flex items-center justify-between">
         <LogoLink link={"/"} />
 
         <div className="flex gap-1 lg:gap-3 items-center">
@@ -27,9 +27,14 @@ const Header = ({ authUser }: Props) => {
               <LogOutButton/>
             </>
           ) : (
-            <Button className="maxter-bg px-4 py-2 rounded-md">
-              <Link href="/login">Login</Link>
-            </Button>
+            <div className="flex gap-2">
+                <Button className="maxter-bg px-4 py-2 rounded-md hidden md:inline">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button className="maxter-bg px-4 py-2 rounded-md">
+                  <Link href="/login">Try for free</Link>
+                </Button>
+            </div>
           )}
 
           <ThemeToggle />
