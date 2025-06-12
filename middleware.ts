@@ -14,7 +14,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (isAuthPage && jwt) {
-    return NextResponse.redirect(new URL("/notes", req.url));
+    return NextResponse.redirect(new URL("/account", req.url));
   }
 
   return NextResponse.next();
