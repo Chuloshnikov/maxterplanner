@@ -32,8 +32,8 @@ const IconTextCard: FC<CardProps> = ({ title, description, iconName, bgColor, ic
         {getIconByName(iconName, iconColor)}
       </div>
       <div>
-        <h3 className="font-semibold text-slate-900 mb-2">{title}</h3>
-        <p className="text-slate-600">{description}</p>
+        <h3 className="font-semibold text-slate-500 mb-2">{title}</h3>
+        <p className="text-slate-500">{description}</p>
       </div>
     </div>
   );
