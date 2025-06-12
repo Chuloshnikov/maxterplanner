@@ -5,11 +5,11 @@ import { BENEFITS } from '@/lib/constants/benefits';
 
 const BenefitsSection = () => {
   return (
-     <section className="py-20 bg-slate-50">
+     <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-6">Why choose MaXter Planner?</h2>
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-500 mb-6">Why choose MaXter Planner?</h2>
               <div className="space-y-6">
                 {BENEFITS.map((reason, index) => (
                 <IconTextCard
@@ -24,7 +24,7 @@ const BenefitsSection = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="rounded-2xl shadow-xl border p-8">
               <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl h-80 flex items-center justify-center">
                 <div className="text-white text-center">
                   <div className="grid xs:grid-cols-1 sml:grid-cols-2 gap-4 mb-6">
