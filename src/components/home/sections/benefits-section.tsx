@@ -27,7 +27,7 @@ const BenefitsSection = () => {
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl h-80 flex items-center justify-center">
                 <div className="text-white text-center">
-                  <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="grid xs:grid-cols-1 sml:grid-cols-2 gap-4 mb-6">
                     <div className="bg-white/20 rounded-lg p-4">
                       <div className="text-2xl font-bold">150+</div>
                       <div className="text-sm">Tasks per day</div>
