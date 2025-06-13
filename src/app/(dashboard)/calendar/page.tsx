@@ -63,57 +63,57 @@ export default function Calendar() {
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: 1,
-      title: "Подготовить презентацию для клиента",
-      description: "Создать слайды и подготовить демонстрацию продукта",
+      title: "Prepare a presentation for a client",
+      description: "Create slides and prepare a product demo",
       priority: "high",
       status: "in-progress",
       date: "2024-01-15",
-      project: "Проект Alpha",
+      project: "Project Alpha",
     },
     {
       id: 2,
-      title: "Код-ревью новых функций",
-      description: "Проверить pull request от команды разработки",
+      title: "Code review of new features",
+      description: "Check pull request from the development team",
       priority: "medium",
       status: "pending",
       date: "2024-01-12",
-      project: "Разработка",
+      project: "Development",
     },
     {
       id: 3,
-      title: "Встреча с командой маркетинга",
-      description: "Обсудить стратегию продвижения на Q1",
+      title: "Meeting with the marketing team",
+      description: "Discuss the promotion strategy for Q1",
       priority: "low",
       status: "completed",
       date: "2024-01-10",
-      project: "Маркетинг",
+      project: "Marketing",
     },
     {
       id: 4,
-      title: "Обновить документацию API",
-      description: "Добавить описание новых эндпоинтов",
+      title: "Update API documentation",
+      description: "Add description of new endpoints",
       priority: "medium",
       status: "pending",
       date: "2024-01-18",
-      project: "Документация",
+      project: "Documentation",
     },
     {
       id: 5,
-      title: "Еженедельный созвон с командой",
-      description: "Обсуждение прогресса и планов на неделю",
+      title: "Weekly call with the team",
+      description: "Discussing progress and plans for the week",
       priority: "medium",
       status: "pending",
       date: "2024-01-08",
-      project: "Команда",
+      project: "Team",
     },
     {
       id: 6,
-      title: "Подготовка отчета",
-      description: "Финансовый отчет за Q4",
+      title: "Preparing the report",
+      description: "Financial report for Q4",
       priority: "high",
       status: "pending",
       date: "2024-01-20",
-      project: "Финансы",
+      project: "Finance",
     },
   ])
 
@@ -213,24 +213,24 @@ export default function Calendar() {
 
   // Получаем название текущего месяца и год
   const monthNames = [
-    "Январь",
-    "Февраль",
-    "Март",
-    "Апрель",
-    "Май",
-    "Июнь",
-    "Июль",
-    "Август",
-    "Сентябрь",
-    "Октябрь",
-    "Ноябрь",
-    "Декабрь",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ]
   const currentMonthName = monthNames[currentDate.getMonth()]
   const currentYear = currentDate.getFullYear()
 
   // Получаем дни недели
-  const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
   // Получаем дни календаря
   const calendarDays = getCalendarDays()
@@ -264,23 +264,23 @@ export default function Calendar() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Calendar Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Календарь</h1>
-            <p className="text-slate-600">Планируйте свои задачи и события</p>
+            <h1 className="text-3xl font-bold text-slate-500 mb-2">Calendar</h1>
+            <p className="text-slate-500">Plan your tasks and events</p>
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="outline" onClick={goToToday}>
-              Сегодня
+              Today
             </Button>
             <div className="flex items-center space-x-2">
               <Button variant="ghost" size="icon" onClick={goToPreviousMonth}>
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <div className="text-lg font-medium text-slate-900 min-w-[180px] text-center">
+              <div className="text-lg font-medium text-slate-500 min-w-[180px] text-center">
                 {currentMonthName} {currentYear}
               </div>
               <Button variant="ghost" size="icon" onClick={goToNextMonth}>
@@ -289,69 +289,69 @@ export default function Calendar() {
             </div>
             <Dialog open={isCreateTaskOpen} onOpenChange={setIsCreateTaskOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="maxter-bg">
                   <Plus className="w-4 h-4 mr-2" />
-                  Новое событие
+                  New event
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Создать новое событие</DialogTitle>
-                  <DialogDescription>Добавьте детали для вашего нового события</DialogDescription>
+                  <DialogTitle>Create a new event</DialogTitle>
+                  <DialogDescription>Add details for your new event</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="space-y-2">
                     <label htmlFor="title" className="text-sm font-medium">
-                      Название
+                      Name
                     </label>
-                    <Input id="title" placeholder="Введите название события" />
+                    <Input id="title" placeholder="Enter the event name" />
                   </div>
                   <div className="space-y-2">
                     <label htmlFor="description" className="text-sm font-medium">
-                      Описание
+                      ОDescription
                     </label>
-                    <Textarea id="description" placeholder="Опишите событие подробнее" />
+                    <Textarea id="description" placeholder="Describe the event in more detail" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Дата</label>
+                      <label className="text-sm font-medium">Date</label>
                       <Input type="date" defaultValue={selectedDate ? formatDateToString(selectedDate) : undefined} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Приоритет</label>
+                      <label className="text-sm font-medium">Priority</label>
                       <Select>
                         <SelectTrigger>
                           <SelectValue placeholder="Выберите приоритет" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="high">Высокий</SelectItem>
-                          <SelectItem value="medium">Средний</SelectItem>
-                          <SelectItem value="low">Низкий</SelectItem>
+                          <SelectItem value="high">High</SelectItem> 
+                          <SelectItem value="medium">Medium</SelectItem> 
+                          <SelectItem value="low">Low</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Проект</label>
+                    <label className="text-sm font-medium">Project</label>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="Выберите проект" />
+                        <SelectValue placeholder="Select a project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="alpha">Проект Alpha</SelectItem>
-                        <SelectItem value="development">Разработка</SelectItem>
-                        <SelectItem value="marketing">Маркетинг</SelectItem>
-                        <SelectItem value="docs">Документация</SelectItem>
+                        <SelectItem value="alpha">Project Alpha</SelectItem> 
+                        <SelectItem value="development">Development</SelectItem> 
+                        <SelectItem value="marketing">Marketing</SelectItem> 
+                        <SelectItem value="docs">Documentation</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" onClick={() => setIsCreateTaskOpen(false)}>
-                    Отмена
+                    Cancel
                   </Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => setIsCreateTaskOpen(false)}>
-                    Создать событие
+                  <Button className="maxter-bg" onClick={() => setIsCreateTaskOpen(false)}>
+                    Create an event
                   </Button>
                 </div>
               </DialogContent>
@@ -368,33 +368,33 @@ export default function Calendar() {
           <div className="flex items-center space-x-4">
             <Button variant="outline" size="sm">
               <Filter className="w-4 h-4 mr-2" />
-              Фильтр
+              Filter
             </Button>
             <Select>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Все проекты" />
+                <SelectValue placeholder="All projects" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Все проекты</SelectItem>
-                <SelectItem value="alpha">Проект Alpha</SelectItem>
-                <SelectItem value="development">Разработка</SelectItem>
-                <SelectItem value="marketing">Маркетинг</SelectItem>
+                <SelectItem value="all">All projects</SelectItem> 
+                <SelectItem value="alpha">Project Alpha</SelectItem> 
+                <SelectItem value="development">Development</SelectItem> 
+                <SelectItem value="marketing">Marketing</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         {/* Calendar */}
-        <Card className="mb-8">
+        <Card className="mb-8 maxter-bg">
           <CardHeader className="pb-0">
-            <CardTitle>Календарь событий</CardTitle>
+            <CardTitle>Events calendar</CardTitle>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 maxter-bg">
             {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-px bg-slate-200 rounded-lg overflow-hidden">
+            <div className="grid grid-cols-7 gap-px  rounded-lg overflow-hidden">
               {/* Days of week */}
               {weekDays.map((day, index) => (
-                <div key={index} className="bg-slate-100 p-2 text-center text-sm font-medium text-slate-600">
+                <div key={index} className=" p-2 text-center text-sm font-medium text-black">
                   {day}
                 </div>
               ))}
@@ -403,7 +403,7 @@ export default function Calendar() {
               {calendarDays.map((day, index) => (
                 <div
                   key={index}
-                  className={`bg-white min-h-[120px] p-2 ${
+                  className={`bg-white text-slate-500 min-h-[120px] p-2 ${
                     day.isCurrentMonth ? "" : "text-slate-400"
                   } ${day.isToday ? "bg-blue-50" : ""}`}
                   onClick={() => {
@@ -415,14 +415,14 @@ export default function Calendar() {
                     <span
                       className={`text-sm font-medium ${
                         day.isToday
-                          ? "bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center"
+                          ? "maxter-bg text-white w-6 h-6 rounded-full flex items-center justify-center"
                           : ""
                       }`}
                     >
                       {day.date.getDate()}
                     </span>
                     {day.tasks.length > 0 && (
-                      <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">{day.tasks.length}</Badge>
+                      <Badge className="bg-blue-100 maxter-bg border-blue-200 text-xs">{day.tasks.length}</Badge>
                     )}
                   </div>
 
@@ -443,7 +443,7 @@ export default function Calendar() {
                       </div>
                     ))}
                     {day.tasks.length > 3 && (
-                      <div className="text-xs text-slate-500 pl-1">+{day.tasks.length - 3} еще</div>
+                      <div className="text-xs text-slate-500 pl-1">+{day.tasks.length - 3} more</div>
                     )}
                   </div>
                 </div>
@@ -456,7 +456,7 @@ export default function Calendar() {
         <div className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Предстоящие события</CardTitle>
+              <CardTitle className="text-lg">Upcoming Events</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -470,14 +470,14 @@ export default function Calendar() {
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
                             {getStatusIcon(task.status)}
-                            <h3 className="font-semibold text-slate-900">{task.title}</h3>
+                            <h3 className="font-semibold text-slate-500">{task.title}</h3>
                             <Badge className={getPriorityColor(task.priority)}>
                               {task.priority === "high" && "Высокий"}
                               {task.priority === "medium" && "Средний"}
                               {task.priority === "low" && "Низкий"}
                             </Badge>
                           </div>
-                          <p className="text-slate-600 text-sm mb-3">{task.description}</p>
+                          <p className="text-slate-500 text-sm mb-3">{task.description}</p>
                           <div className="flex items-center space-x-4 text-sm text-slate-500">
                             <div className="flex items-center space-x-1">
                               <CalendarIcon className="w-4 h-4" />
@@ -492,10 +492,10 @@ export default function Calendar() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Редактировать</DropdownMenuItem>
-                            <DropdownMenuItem>Дублировать</DropdownMenuItem>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">Удалить</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -507,14 +507,14 @@ export default function Calendar() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Статистика по месяцам</CardTitle>
+              <CardTitle className="text-lg">Statistics by month</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <div className="text-sm font-medium">Январь</div>
-                    <div className="text-sm text-slate-500">12 событий</div>
+                    <div className="text-sm font-medium">January</div>
+                    <div className="text-sm text-slate-500">12 events</div>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "75%" }}></div>
@@ -522,8 +522,8 @@ export default function Calendar() {
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <div className="text-sm font-medium">Февраль</div>
-                    <div className="text-sm text-slate-500">8 событий</div>
+                    <div className="text-sm font-medium">February</div>
+                    <div className="text-sm text-slate-500">8 events</div>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "50%" }}></div>
@@ -531,8 +531,8 @@ export default function Calendar() {
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <div className="text-sm font-medium">Март</div>
-                    <div className="text-sm text-slate-500">16 событий</div>
+                    <div className="text-sm font-medium">March</div>
+                    <div className="text-sm text-slate-500">16 events</div>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "100%" }}></div>
@@ -540,8 +540,8 @@ export default function Calendar() {
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <div className="text-sm font-medium">Апрель</div>
-                    <div className="text-sm text-slate-500">5 событий</div>
+                    <div className="text-sm font-medium">April</div>
+                    <div className="text-sm text-slate-500">5 events</div>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "30%" }}></div>
