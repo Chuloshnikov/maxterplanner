@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -22,17 +21,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
   Search,
   Filter,
-  Bell,
-  Settings,
-  User,
-  LogOut,
   MoreHorizontal,
   Mail,
   Phone,
@@ -77,15 +71,15 @@ export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([
     {
       id: 1,
-      name: "Алексей Петров",
-      role: "Руководитель проектов",
-      department: "Управление",
+      name: "Alexey Petrov",
+      role: "Project Manager",
+      department: "Management",
       email: "alex@example.com",
       phone: "+7 (999) 123-45-67",
       avatar: "/placeholder.svg?height=200&width=200",
       status: "online",
       projects: [1, 2, 4],
-      skills: ["Управление проектами", "Agile", "Scrum", "Стратегическое планировани��"],
+      skills: ["Project Management", "Agile", "Scrum", "Strategic Planning"],
       completedTasks: 48,
       totalTasks: 52,
       joinedDate: "2022-01-15",
@@ -94,15 +88,15 @@ export default function TeamPage() {
     },
     {
       id: 2,
-      name: "Мария Смирнова",
-      role: "Дизайнер",
-      department: "Дизайн",
+      name: "Maria Smirnova",
+      role: "Designer",
+      department: "Design",
       email: "maria@example.com",
       phone: "+38 (067) 234-56-78",
       avatar: "/placeholder.svg?height=200&width=200",
       status: "online",
       projects: [1, 3],
-      skills: ["UI/UX", "Figma", "Adobe XD", "Иллюстрация"],
+      skills: ["UI/UX", "Figma", "Adobe XD", "Illustration"],
       completedTasks: 32,
       totalTasks: 36,
       joinedDate: "2022-03-10",
@@ -111,9 +105,9 @@ export default function TeamPage() {
     },
     {
       id: 3,
-      name: "Иван Козлов",
-      role: "Разработчик",
-      department: "Разработка",
+      name: "Ivan Kozlov",
+      role: "Developer",
+      department: "Development",
       email: "ivan@example.com",
       phone: "+38 (067) 345-67-89",
       avatar: "/placeholder.svg?height=200&width=200",
@@ -128,15 +122,15 @@ export default function TeamPage() {
     },
     {
       id: 4,
-      name: "Ольга Васильева",
-      role: "Маркетолог",
-      department: "Маркетинг",
+      name: "Olga Vasilyeva",
+      role: "Marketer",
+      department: "Marketing",
       email: "olga@example.com",
       phone: "+38 (067) 456-78-90",
       avatar: "/placeholder.svg?height=200&width=200",
       status: "offline",
       projects: [2, 3],
-      skills: ["SMM", "Контент-маркетинг", "Email-маркетинг", "Аналитика"],
+      skills: ["SMM", "Content Marketing", "Email Marketing", "Analytics"],
       completedTasks: 28,
       totalTasks: 34,
       joinedDate: "2022-04-20",
@@ -145,9 +139,9 @@ export default function TeamPage() {
     },
     {
       id: 5,
-      name: "Дмитрий Лебедев",
-      role: "Разработчик",
-      department: "Разработка",
+      name: "Dmitry Lebedev",
+      role: "Developer",
+      department: "Development",
       email: "dmitry@example.com",
       phone: "+38 (067) 567-89-01",
       avatar: "/placeholder.svg?height=200&width=200",
@@ -162,9 +156,9 @@ export default function TeamPage() {
     },
     {
       id: 6,
-      name: "Сергей Новиков",
-      role: "Аналитик",
-      department: "Аналитика",
+      name: "Sergey Novikov",
+      role: "Analyst",
+      department: "Analytics",
       email: "sergey@example.com",
       phone: "+38 (067) 678-90-12",
       avatar: "/placeholder.svg?height=200&width=200",
@@ -179,15 +173,15 @@ export default function TeamPage() {
     },
     {
       id: 7,
-      name: "Анна Морозова",
-      role: "HR-менеджер",
+      name: "Anna Morozova",
+      role: "HR manager",
       department: "HR",
       email: "anna@example.com",
       phone: "+38 (067) 789-01-23",
       avatar: "/placeholder.svg?height=200&width=200",
       status: "online",
       projects: [6],
-      skills: ["Рекрутинг", "Адаптация", "Обучение", "Кадровое делопроизводство"],
+      skills: ["Recruiting", "Adaptation", "Training", "HR administration"],
       completedTasks: 24,
       totalTasks: 28,
       joinedDate: "2022-07-05",
@@ -196,15 +190,15 @@ export default function TeamPage() {
     },
     {
       id: 8,
-      name: "Павел Соколов",
-      role: "Тестировщик",
+      name: "Pavel Sokolov",
+      role: "Tester",
       department: "QA",
       email: "pavel@example.com",
       phone: "+38 (067) 890-12-34",
       avatar: "/placeholder.svg?height=200&width=200",
       status: "offline",
       projects: [1, 2],
-      skills: ["Ручное тестирование", "Автоматизация", "Selenium", "Postman"],
+      skills: ["Manual testing", "Automation", "Selenium", "Postman"],
       completedTasks: 38,
       totalTasks: 44,
       joinedDate: "2022-08-15",
@@ -285,7 +279,7 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Team Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
@@ -586,13 +580,13 @@ export default function TeamPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-50 rounded-lg p-4 text-center">
+                  <div className="border rounded-lg p-4 text-center">
                     <div className="text-3xl font-bold text-blue-600 mb-1">
                       {teamMembers.reduce((acc, member) => acc + member.completedTasks, 0)}
                     </div>
                     <div className="text-sm text-slate-600">Completed tasks</div>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-4 text-center">
+                  <div className="border rounded-lg p-4 text-center">
                     <div className="text-3xl font-bold text-blue-600 mb-1">{projects.length}</div>
                     <div className="text-sm text-slate-600">Active projects</div>
                   </div>
