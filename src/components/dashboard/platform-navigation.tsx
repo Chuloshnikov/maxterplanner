@@ -29,28 +29,28 @@ const PlatformNavigation = () => {
 
             <Button
               variant="ghost"
-              className={isActive('/account') ? 'text-blue-600 bg-blue-50' : 'text-slate-600'}
+              className={isActive('/account') ? 'maxter-text bg-blue-50' : 'text-slate-600'}
             >
               <Link href="/account">Notes</Link>
             </Button>
 
             <Button
               variant="ghost"
-              className={isActive('/projects') ? 'text-blue-600 bg-blue-50' : 'text-slate-600'}
+              className={isActive('/projects') ? 'maxter-text bg-blue-50' : 'text-slate-600'}
             >
-              <Link href="/projects">Проекты</Link>
+              <Link href="/projects">Projects</Link>
             </Button>
 
             <Button
               variant="ghost"
-              className={isActive('/calendar') ? 'text-blue-600 bg-blue-50' : 'text-slate-600'}
+              className={isActive('/calendar') ? 'maxter-text bg-blue-50' : 'text-slate-600'}
             >
               <Link href="/calendar">Сalendar</Link>
             </Button>
 
             <Button
               variant="ghost"
-              className={isActive('/team') ? 'text-blue-600 bg-blue-50' : 'text-slate-600'}
+              className={isActive('/team') ? 'maxter-text bg-blue-50' : 'text-slate-600'}
             >
               <Link href="/team">Team</Link>
             </Button>
