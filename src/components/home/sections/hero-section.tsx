@@ -20,7 +20,7 @@ const HeroSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="maxter-bg hover:bg-blue-500 text-lg px-8 py-3">
-              <Link href="/notes">Try for free</Link>
+              <Link href="/account">Try for free</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 py-3">
               <Link href="/demo">View demo</Link>

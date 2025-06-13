@@ -157,8 +157,8 @@ export default function ProjectsPage() {
       },
       deadline: "2024-01-25",
       team: [
-        { id: 3, name: "Иван К.", avatar: "/placeholder.svg?height=32&width=32" },
-        { id: 6, name: "Сергей Н.", avatar: "/placeholder.svg?height=32&width=32" },
+        { id: 3, name: "Ivan К.", avatar: "/placeholder.svg?height=32&width=32" },
+        { id: 6, name: "Serhy Н.", avatar: "/placeholder.svg?height=32&width=32" },
       ],
       isFavorite: false,
       createdAt: "2024-01-02",
@@ -166,7 +166,7 @@ export default function ProjectsPage() {
     },
     {
       id: 6,
-      name: "ОStaff training",
+      name: "Staff training",
       description: "Training program for new employees",
       status: "active",
       progress: 50,
@@ -251,17 +251,16 @@ export default function ProjectsPage() {
   const categories = Array.from(new Set(projects.map((project) => project.category)))
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        {/* Projects Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Projects</h1>
-            <p className="text-slate-600">Manage all your projects in one place</p>
+            <h1 className="text-3xl font-bold text-slate-500 mb-2">Projects</h1>
+            <p className="text-slate-500">Manage all your projects in one place</p>
           </div>
           <Dialog open={isCreateProjectOpen} onOpenChange={setIsCreateProjectOpen}>
             <DialogTrigger asChild>
-              <Button className="maxter-bg">
+              <Button className="maxter-bg text-white">
                 <Plus className="w-4 h-4 mr-2" />
                 New project
               </Button>
@@ -721,7 +720,7 @@ export default function ProjectsPage() {
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div
-                      className="bg-blue-600 h-2.5 rounded-full"
+                      className="maxter-bg h-2.5 rounded-full"
                       style={{
                         width: `${(projects.filter((p) => p.status === "active").length / projects.length) * 100}%`,
                       }}
@@ -787,15 +786,15 @@ export default function ProjectsPage() {
                       <div className="w-full bg-slate-100 rounded-full h-2.5">
                         <div
                           className={`${
-                            category === "Дизайн"
+                            category === "Design"
                               ? "bg-purple-600"
-                              : category === "Разработка"
+                              : category === "Development"
                                 ? "bg-blue-600"
-                                : category === "Маркетинг"
+                                : category === "Marketing"
                                   ? "bg-green-600"
                                   : category === "IT"
                                     ? "bg-cyan-600"
-                                    : category === "Аналитика"
+                                    : category === "Analytics"
                                       ? "bg-orange-600"
                                       : "bg-slate-600"
                           } h-2.5 rounded-full`}
@@ -823,8 +822,8 @@ export default function ProjectsPage() {
               <div className="flex items-start space-x-4">
                 <div className="min-w-10 pt-1">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Мария С." />
-                    <AvatarFallback>МС</AvatarFallback>
+                    <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Мaria S." />
+                    <AvatarFallback>МS</AvatarFallback>
                   </Avatar>
                 </div>
                 <div className="flex-1">
