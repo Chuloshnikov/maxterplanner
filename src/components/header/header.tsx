@@ -2,7 +2,6 @@ import Link from "next/link";
 import ThemeToggle from "@/components/theme/theme-toogle";
 import LogoLink from "@/components/logo/logo-link";
 import { Button } from "../ui/button";
-import { SquareUser } from "lucide-react";
 import LogOutButton from "./log-out-button";
 
 type Props = {
@@ -19,7 +18,7 @@ const Header = ({ authUser }: Props) => {
           {authUser ? (
             <>
               <Link href="/account" className="maxter-bg px-4 py-1.5 rounded-md text-white">
-                Notes
+                Dashboard
               </Link>
               <LogOutButton/>
             </>
