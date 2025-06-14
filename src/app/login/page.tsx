@@ -8,7 +8,7 @@ export default async function Login() {
   const authUser = await getServerAuthUser();
 
   if (authUser) {
-    redirect("/notes");
+    redirect("/account");
   }
   return (
     <div className='max-w-4xl mx-auto px-4 h-screen w-screen mt-20'>

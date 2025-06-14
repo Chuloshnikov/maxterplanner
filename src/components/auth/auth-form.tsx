@@ -12,7 +12,6 @@ import { toast } from "sonner";
 import { FormType } from "../../../types";
 import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
-import { useRouter } from "next/navigation";
 import { useSignIn, useSignUp } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 
@@ -21,7 +20,6 @@ import { AxiosError } from "axios";
 
 const AuthForm = ({ type }: { type: FormType }) => {
   const formSchema = authFormSchema(type);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
