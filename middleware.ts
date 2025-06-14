@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   //console.log("🧠 middleware active — JWT:", jwt?.value);
 
   const { pathname } = req.nextUrl;
-  const isProtectedRoute = pathname.startsWith("/notes") || pathname.startsWith("/calendar") || pathname.startsWith("/account");
+  const isProtectedRoute = pathname.startsWith("/account") || pathname.startsWith("/calendar") || pathname.startsWith("/projects") || pathname.startsWith("/team");
   const isAuthPage = pathname === "/login" || pathname === "/sign-up";
 
   if (isProtectedRoute && !jwt) {
@@ -21,5 +21,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/notes/:path*", "/calendar/:path*", "/account/:path*", "/login", "/sign-up"],
+  matcher: ["/team/:path*", "/calendar/:path*", "/account/:path*", "/projects/:path*", "/login", "/sign-up"],
 };
