@@ -12,6 +12,13 @@ export interface CardProps {
       iconColor: string;
 }
 
+export interface AuthUser {
+  id: string;
+  username: string;
+  email: string;
+  profilePic: string;
+}
+
 
 
 type FormType = "sign-in" | "sign-up";
