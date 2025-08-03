@@ -1,27 +1,28 @@
 import { cookies } from "next/headers";
 
+
+
 export async function getServerAuthUser() {
-  const cookieStore = await cookies(); 
+  const cookieStore = await cookies();
+  const jwt = cookieStore.get("jwt");
+  
+  // Если токена нет, сразу возвращаем null
+  if (!jwt) return null;
 
-  const cookieHeader = cookieStore.toString();
-
-  //console.log("cookieHeader:", cookieHeader); //  собсно токен здесь
-
+  // Проверяем аутентификацию с кэшированием
   const res = await fetch(`${process.env.BACKEND_URL}/auth/check`, {
     headers: {
-      Cookie: cookieHeader,
+      Cookie: cookieStore.toString(),
       "Content-Type": "application/json",
     },
     credentials: "include",
-    cache: "no-store",
+    next: { revalidate: 300 } // Кэшируем на 5 минут (300 секунд)
   });
 
-  console.log("🔁 auth check response", res.status);
-
   if (!res.ok) return null;
-
   return res.json();
 }
+
 
 
 export async function serverSignUp(data: { username: string; email: string; password: string }) {

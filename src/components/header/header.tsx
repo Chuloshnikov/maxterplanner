@@ -1,14 +1,16 @@
+"use client"
+
 import Link from "next/link";
 import ThemeToggle from "@/components/theme/theme-toogle";
 import LogoLink from "@/components/logo/logo-link";
 import { Button } from "../ui/button";
 import LogOutButton from "./log-out-button";
+import { useAuthUser } from "@/hooks/useAuth";
 
-type Props = {
-  authUser: { id: string; email?: string } | null;
-};
+const Header = () => {
+  const { data: authUser } = useAuthUser();
 
-const Header = ({ authUser }: Props) => {
+
   return (
     <header className="w-full sticky top-0 z-50 border-b backdrop-blur-sm">
       <nav className="p-4 flex items-center justify-between">
