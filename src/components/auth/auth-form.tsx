@@ -9,7 +9,7 @@ import {
   Form,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { FormType } from "../../../types";
+import type { FormType } from "../../../types";
 import { authFormSchema } from "@/lib/validation";
 import FormField from "./form-field";
 import { useSignIn, useSignUp } from "@/hooks/useAuth";
