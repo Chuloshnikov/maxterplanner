@@ -1,14 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -42,8 +45,13 @@ import {
 import { useAuthUser } from "@/hooks/useAuth"
 import { Skeleton } from "@/components/ui/skeleton"
 
+import { useCreateTask } from "@/hooks/useTasks";
+import type { z } from "zod";
+import { taskSchema } from "@/lib/validation";
+
 export default function AccountPage() {
   const { data: authUser, isLoading, isError } = useAuthUser();
+  const createTaskMutation = useCreateTask();
   console.log("Auth User:", authUser);
 
   const [tasks, setTasks] = useState([
@@ -117,12 +125,42 @@ export default function AccountPage() {
   const totalTasks = tasks.length
   const completionRate = Math.round((completedTasks / totalTasks) * 100);
 
+  type TaskFormValues = z.infer<typeof taskSchema>;
 
-  function handleCreateTask() {
+  const form = useForm<TaskFormValues>({
+  resolver: zodResolver(taskSchema),
+  defaultValues: {
+    title: "",
+    description: "",
+    priority: "medium",
+    dueDate: "",
+    project: "other",
+  }
+});
 
-     setIsCreateTaskOpen(false);
+
+
+  async function handleCreateTask(data: TaskFormValues) {
+  if (!authUser) {
+    toast.error("User not authenticated");
+    return;
   }
 
+  try {
+    await createTaskMutation.mutateAsync({
+      ...data,
+      userId: authUser.id, 
+      status: "pending",
+    });
+
+    toast.success("Task created successfully!");
+    setIsCreateTaskOpen(false);
+    form.reset(); 
+  } catch (error) {
+    toast.error("Failed to create task");
+    console.error(error);
+  }
+}
 
    if (isLoading) {
     return (
@@ -172,12 +210,12 @@ export default function AccountPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-16">
             <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-slate-700 mb-2">Ошибка загрузки данных</h2>
+            <h2 className="text-2xl font-bold text-slate-700 mb-2">Data loading error</h2>
             <p className="text-slate-600 mb-6">
-              Не удалось загрузить информацию о вашем аккаунте. Пожалуйста, попробуйте позже.
+              There was a problem loading your account information. Please try again later.
             </p>
             <Button onClick={() => window.location.reload()} className="maxter-bg">
-              Попробовать снова
+              Try again
             </Button>
           </div>
         </div>
@@ -255,36 +293,54 @@ export default function AccountPage() {
                     <CardDescription>Manage your tasks and projects</CardDescription>
                   </div>
                   <Dialog open={isCreateTaskOpen} onOpenChange={setIsCreateTaskOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="maxter-bg">
-                        <Plus className="w-4 h-4 mr-2" />
-                          New task
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Create a new task</DialogTitle>
-                        <DialogDescription>Add details for your new task</DialogDescription>
-                      </DialogHeader>
+                  <DialogTrigger asChild>
+                    <Button className="maxter-bg">
+                      <Plus className="w-4 h-4 mr-2" />
+                      New task
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Create a new task</DialogTitle>
+                      <DialogDescription>Add details for your new task</DialogDescription>
+                    </DialogHeader>
+                    
+                    <form onSubmit={form.handleSubmit(handleCreateTask)}>
                       <div className="grid gap-4 py-4">
                         <div className="space-y-2">
                           <label htmlFor="title" className="text-sm font-medium">
                             Name
                           </label>
-                          <Input id="title" placeholder="Введите название задачи" />
+                          <Input 
+                            id="title" 
+                            placeholder="Enter task title" 
+                            {...form.register("title")}
+                          />
+                          {form.formState.errors.title && (
+                            <p className="text-red-500 text-xs">{form.formState.errors.title.message}</p>
+                          )}
                         </div>
+                        
                         <div className="space-y-2">
                           <label htmlFor="description" className="text-sm font-medium">
                             Description
                           </label>
-                          <Textarea id="description" placeholder="Опишите задачу подробнее" />
+                          <Textarea 
+                            id="description" 
+                            placeholder="Describe the task in detail" 
+                            {...form.register("description")}
+                          />
                         </div>
+                        
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <label className="text-sm font-medium">Priority</label>
-                            <Select>
+                            <Select 
+                              onValueChange={(value) => form.setValue("priority", value as "high" | "medium" | "low")}
+                              value={form.watch("priority")}
+                            >
                               <SelectTrigger>
-                                <SelectValue placeholder="Выберите приоритет" />
+                                <SelectValue placeholder="Select priority" />
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="high">High</SelectItem> 
@@ -293,38 +349,61 @@ export default function AccountPage() {
                               </SelectContent>
                             </Select>
                           </div>
+                          
                           <div className="space-y-2">
                             <label className="text-sm font-medium">Deadline</label>
-                            <Input type="date" />
+                            <Input 
+                              type="date" 
+                              {...form.register("dueDate")}
+                            />
+                            {form.formState.errors.dueDate && (
+                              <p className="text-red-500 text-xs">{form.formState.errors.dueDate.message}</p>
+                            )}
                           </div>
                         </div>
+                        
                         <div className="space-y-2">
                           <label className="text-sm font-medium">Project</label>
-                          <Select>
+                          <Select 
+                            onValueChange={(value) => form.setValue("project", value)}
+                            value={form.watch("project")}
+                          >
                             <SelectTrigger>
-                              <SelectValue placeholder="Выберите проект" />
+                              <SelectValue placeholder="Select project" />
                             </SelectTrigger>
                             <SelectContent>
+                              <SelectItem value="other">Other</SelectItem> 
                               <SelectItem value="alpha">Project Alpha</SelectItem> 
                               <SelectItem value="development">Development</SelectItem> 
                               <SelectItem value="marketing">Marketing</SelectItem> 
                               <SelectItem value="docs">Documentation</SelectItem>
                             </SelectContent>
                           </Select>
+                          {form.formState.errors.project && (
+                            <p className="text-red-500 text-xs">{form.formState.errors.project.message}</p>
+                          )}
                         </div>
                       </div>
+                      
                       <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsCreateTaskOpen(false)}>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setIsCreateTaskOpen(false)}
+                          disabled={createTaskMutation.isPending}
+                        >
                           Cancel
                         </Button>
                         <Button 
-                        className="maxter-bg" 
-                        onClick={handleCreateTask}>
-                          Create task1
+                          className="maxter-bg" 
+                          type="submit"
+                          disabled={createTaskMutation.isPending}
+                        >
+                          {createTaskMutation.isPending ? "Creating..." : "Create task"}
                         </Button>
                       </div>
-                    </DialogContent>
-                  </Dialog>
+                    </form>
+                  </DialogContent>
+                </Dialog>
                 </div>
               </CardHeader>
               <CardContent>

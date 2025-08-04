@@ -9,7 +9,7 @@ export default async function SignUp() {
   const authUser = await getServerAuthUser();
   
   if (authUser) {
-    redirect("/notes");
+    redirect("/account");
   }
 
   return (
