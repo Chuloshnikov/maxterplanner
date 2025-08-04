@@ -39,8 +39,13 @@ import {
   Users,
 
 } from "lucide-react"
+import { useAuthUser } from "@/hooks/useAuth"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default function DashboardPage() {
+export default function AccountPage() {
+  const { data: authUser, isLoading, isError } = useAuthUser();
+  console.log("Auth User:", authUser);
+
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -58,7 +63,7 @@ export default function DashboardPage() {
       priority: "medium",
       status: "pending",
       dueDate: "2024-01-12",
-      project: "Разработка",
+      project: "Development",
     },
     {
       id: 3,
@@ -112,12 +117,75 @@ export default function DashboardPage() {
   const totalTasks = tasks.length
   const completionRate = Math.round((completedTasks / totalTasks) * 100)
 
+   if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          {/* Скелетоны для статистики */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-4 rounded-full" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-6 w-16 mb-1" />
+                  <Skeleton className="h-3 w-32" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {/* Основной скелетон */}
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <Skeleton className="h-12 w-full" />
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} className="h-32 w-full rounded-lg" />
+              ))}
+            </div>
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-64 w-full rounded-lg" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center py-16">
+            <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-slate-700 mb-2">Ошибка загрузки данных</h2>
+            <p className="text-slate-600 mb-6">
+              Не удалось загрузить информацию о вашем аккаунте. Пожалуйста, попробуйте позже.
+            </p>
+            <Button onClick={() => window.location.reload()} className="maxter-bg">
+              Попробовать снова
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br">
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-500 mb-2">Welcome, Max!👋</h1>
+          <h1 className="text-3xl font-bold text-slate-500 mb-2">
+            Welcome, {authUser?.name || authUser?.username || 'Пользователь'}!👋
+          </h1>
           <p className="text-slate-600">Here&apos;s what&apos;s happening with your projects today</p>
         </div>
 

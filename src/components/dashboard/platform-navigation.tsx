@@ -45,7 +45,7 @@ const PlatformNavigation = () => {
               variant="ghost"
               className={isActive('/calendar') ? 'maxter-text bg-blue-50' : 'text-slate-500'}
             >
-              <Link href="/calendar">Сalendar</Link>
+              <Link href="/calendar">Calendar</Link>
             </Button>
 
             <Button
