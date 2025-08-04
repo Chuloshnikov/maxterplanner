@@ -115,7 +115,14 @@ export default function AccountPage() {
 
   const completedTasks = tasks.filter((task) => task.status === "completed").length
   const totalTasks = tasks.length
-  const completionRate = Math.round((completedTasks / totalTasks) * 100)
+  const completionRate = Math.round((completedTasks / totalTasks) * 100);
+
+
+  function handleCreateTask() {
+
+     setIsCreateTaskOpen(false);
+  }
+
 
    if (isLoading) {
     return (
@@ -125,7 +132,7 @@ export default function AccountPage() {
             <Skeleton className="h-8 w-64 mb-2" />
             <Skeleton className="h-4 w-80" />
           </div>
-          {/* Скелетоны для статистики */}
+          {/* Skeleton for statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {[...Array(4)].map((_, i) => (
               <Card key={i}>
@@ -140,7 +147,7 @@ export default function AccountPage() {
               </Card>
             ))}
           </div>
-          {/* Основной скелетон */}
+          {/* skeleton */}
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
               <Skeleton className="h-12 w-full" />
@@ -310,8 +317,10 @@ export default function AccountPage() {
                         <Button variant="outline" onClick={() => setIsCreateTaskOpen(false)}>
                           Cancel
                         </Button>
-                        <Button className="maxter-bg" onClick={() => setIsCreateTaskOpen(false)}>
-                          Create task
+                        <Button 
+                        className="maxter-bg" 
+                        onClick={handleCreateTask}>
+                          Create task1
                         </Button>
                       </div>
                     </DialogContent>
