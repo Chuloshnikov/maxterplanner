@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -40,60 +40,37 @@ import {
   Target,
   TrendingUp,
   Users,
-
+  FolderOpen
 } from "lucide-react"
 import { useAuthUser } from "@/hooks/useAuth"
 import { Skeleton } from "@/components/ui/skeleton"
 
-import { useCreateTask } from "@/hooks/useTasks";
+import { useCreateTask, useTasks } from "@/hooks/useTasks";
 import type { z } from "zod";
 import { taskSchema } from "@/lib/validation";
 
 export default function AccountPage() {
   const { data: authUser, isLoading, isError } = useAuthUser();
   const createTaskMutation = useCreateTask();
-  console.log("Auth User:", authUser);
+  const { data: tasks = [], isLoading: tasksLoading, refetch } = useTasks();
+  
+  const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Prepare a presentation for the client",
-      description: "Create slides and prepare a product demonstration",
-      priority: "high",
-      status: "in-progress",
-      dueDate: "2024-01-15",
-      project: "Project Alpha",
-    },
-    {
-      id: 2,
-      title: "Code review of new features",
-      description: "Check the pull request from the development team",
-      priority: "medium",
-      status: "pending",
-      dueDate: "2024-01-12",
-      project: "Development",
-    },
-    {
-      id: 3,
-      title: "Meeting with the Marketing Team",
-      description: "Discuss Q1 promotion strategy",
-      priority: "low",
-      status: "completed",
-      dueDate: "2024-01-10",
-      project: "Marketing",
-    },
-    {
-      id: 4,
-      title: "Update API documentation",
-      description: "Add description of new endpoints",
-      priority: "medium",
-      status: "pending",
-      dueDate: "2024-01-18",
-      project: "Documentation",
-    },
-  ])
+  // Фильтруем задачи по текущему пользователю
+  useEffect(() => {
+    if (authUser && tasks.length > 0) {
+      const userTasks = tasks.filter(task => task.userId === authUser.id);
+      setFilteredTasks(userTasks);
+    } else {
+      setFilteredTasks([]);
+    }
+  }, [tasks, authUser]);
 
-  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false)
+  // Статистика задач
+  const completedTasks = filteredTasks.filter(task => task.status === "completed").length;
+  const totalTasks = filteredTasks.length;
+  const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -121,48 +98,45 @@ export default function AccountPage() {
     }
   }
 
-  const completedTasks = tasks.filter((task) => task.status === "completed").length
-  const totalTasks = tasks.length
-  const completionRate = Math.round((completedTasks / totalTasks) * 100);
-
   type TaskFormValues = z.infer<typeof taskSchema>;
 
   const form = useForm<TaskFormValues>({
-  resolver: zodResolver(taskSchema),
-  defaultValues: {
-    title: "",
-    description: "",
-    priority: "medium",
-    dueDate: "",
-    project: "other",
-  }
-});
-
-
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      priority: "medium",
+      dueDate: "",
+      project: "other",
+    }
+  });
 
   async function handleCreateTask(data: TaskFormValues) {
-  if (!authUser) {
-    toast.error("User not authenticated");
-    return;
+    if (!authUser) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    try {
+      await createTaskMutation.mutateAsync({
+        ...data,
+        userId: authUser.id, 
+        status: "pending",
+      });
+
+      toast.success("Task created successfully!");
+      setIsCreateTaskOpen(false);
+      form.reset();
+      
+      // Обновляем список задач после создания
+      refetch();
+    } catch (error) {
+      toast.error("Failed to create task");
+      console.error(error);
+    }
   }
 
-  try {
-    await createTaskMutation.mutateAsync({
-      ...data,
-      userId: authUser.id, 
-      status: "pending",
-    });
-
-    toast.success("Task created successfully!");
-    setIsCreateTaskOpen(false);
-    form.reset(); 
-  } catch (error) {
-    toast.error("Failed to create task");
-    console.error(error);
-  }
-}
-
-   if (isLoading) {
+  if (isLoading || tasksLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br">
         <div className="container mx-auto px-4 py-8">
@@ -229,7 +203,7 @@ export default function AccountPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-500 mb-2">
-            Welcome, {authUser?.name || authUser?.username || 'Пользователь'}!👋
+            Welcome, {authUser?.name || authUser?.username || 'User'}!👋
           </h1>
           <p className="text-slate-600">Here&apos;s what&apos;s happening with your projects today</p>
         </div>
@@ -243,7 +217,7 @@ export default function AccountPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalTasks}</div>
-              <p className="text-xs text-muted-foreground">+2 since last week</p>
+              <p className="text-xs text-muted-foreground">Your active tasks</p>
             </CardContent>
           </Card>
 
@@ -254,7 +228,7 @@ export default function AccountPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{completedTasks}</div>
-              <p className="text-xs text-muted-foreground">+1 today</p>
+              <p className="text-xs text-muted-foreground">Completed tasks</p>
             </CardContent>
           </Card>
 
@@ -293,324 +267,345 @@ export default function AccountPage() {
                     <CardDescription>Manage your tasks and projects</CardDescription>
                   </div>
                   <Dialog open={isCreateTaskOpen} onOpenChange={setIsCreateTaskOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="maxter-bg">
-                      <Plus className="w-4 h-4 mr-2" />
-                      New task
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Create a new task</DialogTitle>
-                      <DialogDescription>Add details for your new task</DialogDescription>
-                    </DialogHeader>
-                    
-                    <form onSubmit={form.handleSubmit(handleCreateTask)}>
-                      <div className="grid gap-4 py-4">
-                        <div className="space-y-2">
-                          <label htmlFor="title" className="text-sm font-medium">
-                            Name
-                          </label>
-                          <Input 
-                            id="title" 
-                            placeholder="Enter task title" 
-                            {...form.register("title")}
-                          />
-                          {form.formState.errors.title && (
-                            <p className="text-red-500 text-xs">{form.formState.errors.title.message}</p>
-                          )}
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <label htmlFor="description" className="text-sm font-medium">
-                            Description
-                          </label>
-                          <Textarea 
-                            id="description" 
-                            placeholder="Describe the task in detail" 
-                            {...form.register("description")}
-                          />
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
+                    <DialogTrigger asChild>
+                      <Button className="maxter-bg">
+                        <Plus className="w-4 h-4 mr-2" />
+                        New task
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Create a new task</DialogTitle>
+                        <DialogDescription>Add details for your new task</DialogDescription>
+                      </DialogHeader>
+                      
+                      <form onSubmit={form.handleSubmit(handleCreateTask)}>
+                        <div className="grid gap-4 py-4">
                           <div className="space-y-2">
-                            <label className="text-sm font-medium">Priority</label>
-                            <Select 
-                              onValueChange={(value) => form.setValue("priority", value as "high" | "medium" | "low")}
-                              value={form.watch("priority")}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select priority" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="high">High</SelectItem> 
-                                <SelectItem value="medium">Medium</SelectItem> 
-                                <SelectItem value="low">Low</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <label htmlFor="title" className="text-sm font-medium">
+                              Name
+                            </label>
+                            <Input 
+                              id="title" 
+                              placeholder="Enter task title" 
+                              {...form.register("title")}
+                            />
+                            {form.formState.errors.title && (
+                              <p className="text-red-500 text-xs">{form.formState.errors.title.message}</p>
+                            )}
                           </div>
                           
                           <div className="space-y-2">
-                            <label className="text-sm font-medium">Deadline</label>
-                            <Input 
-                              type="date" 
-                              {...form.register("dueDate")}
+                            <label htmlFor="description" className="text-sm font-medium">
+                              Description
+                            </label>
+                            <Textarea 
+                              id="description" 
+                              placeholder="Describe the task in detail" 
+                              {...form.register("description")}
                             />
-                            {form.formState.errors.dueDate && (
-                              <p className="text-red-500 text-xs">{form.formState.errors.dueDate.message}</p>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Priority</label>
+                              <Select 
+                                onValueChange={(value) => form.setValue("priority", value as "high" | "medium" | "low")}
+                                value={form.watch("priority")}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select priority" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="high">High</SelectItem> 
+                                  <SelectItem value="medium">Medium</SelectItem> 
+                                  <SelectItem value="low">Low</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Deadline</label>
+                              <Input 
+                                type="date" 
+                                {...form.register("dueDate")}
+                              />
+                              {form.formState.errors.dueDate && (
+                                <p className="text-red-500 text-xs">{form.formState.errors.dueDate.message}</p>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Project</label>
+                            <Select 
+                              onValueChange={(value) => form.setValue("project", value)}
+                              value={form.watch("project")}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select project" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="other">Other</SelectItem> 
+                                <SelectItem value="alpha">Project Alpha</SelectItem> 
+                                <SelectItem value="development">Development</SelectItem> 
+                                <SelectItem value="marketing">Marketing</SelectItem> 
+                                <SelectItem value="docs">Documentation</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {form.formState.errors.project && (
+                              <p className="text-red-500 text-xs">{form.formState.errors.project.message}</p>
                             )}
                           </div>
                         </div>
                         
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Project</label>
-                          <Select 
-                            onValueChange={(value) => form.setValue("project", value)}
-                            value={form.watch("project")}
+                        <div className="flex justify-end space-x-2">
+                          <Button 
+                            variant="outline" 
+                            onClick={() => setIsCreateTaskOpen(false)}
+                            disabled={createTaskMutation.isPending}
                           >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select project" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="other">Other</SelectItem> 
-                              <SelectItem value="alpha">Project Alpha</SelectItem> 
-                              <SelectItem value="development">Development</SelectItem> 
-                              <SelectItem value="marketing">Marketing</SelectItem> 
-                              <SelectItem value="docs">Documentation</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {form.formState.errors.project && (
-                            <p className="text-red-500 text-xs">{form.formState.errors.project.message}</p>
-                          )}
+                            Cancel
+                          </Button>
+                          <Button 
+                            className="maxter-bg" 
+                            type="submit"
+                            disabled={createTaskMutation.isPending}
+                          >
+                            {createTaskMutation.isPending ? "Creating..." : "Create task"}
+                          </Button>
                         </div>
-                      </div>
-                      
-                      <div className="flex justify-end space-x-2">
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setIsCreateTaskOpen(false)}
-                          disabled={createTaskMutation.isPending}
-                        >
-                          Cancel
-                        </Button>
-                        <Button 
-                          className="maxter-bg" 
-                          type="submit"
-                          disabled={createTaskMutation.isPending}
-                        >
-                          {createTaskMutation.isPending ? "Creating..." : "Create task"}
-                        </Button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input placeholder="Поиск задач..." className="pl-10" />
+                {filteredTasks.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="bg-gray-100 p-6 rounded-lg inline-block">
+                      <FolderOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">No tasks yet</h3>
+                      <p className="text-gray-600 mb-4">
+                        Get started by creating your first task
+                      </p>
+                      <Button 
+                        className="maxter-bg"
+                        onClick={() => setIsCreateTaskOpen(true)}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create First Task
+                      </Button>
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter
-                  </Button>
-                </div>
-
-                <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="pending">Pending</TabsTrigger>
-                    <TabsTrigger value="in-progress">In progress</TabsTrigger>
-                    <TabsTrigger value="completed">Completed</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="all" className="space-y-4 mt-6">
-                    {tasks.map((task) => (
-                      <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              {getStatusIcon(task.status)}
-                              <h3 className="font-semibold text-slate-500">{task.title}</h3>
-                              <Badge className={getPriorityColor(task.priority)}>
-                                {task.priority === "high" && "High"}
-                                {task.priority === "medium" && "Medium"}
-                                {task.priority === "low" && "Low"}
-                              </Badge>
-                            </div>
-                            <p className="text-slate-500 text-sm mb-3">{task.description}</p>
-                            <div className="flex items-center space-x-4 text-sm text-slate-500">
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{task.dueDate}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Users className="w-4 h-4" />
-                                <span>{task.project}</span>
-                              </div>
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <Input placeholder="Search tasks..." className="pl-10" />
                       </div>
-                    ))}
-                  </TabsContent>
+                      <Button variant="outline" size="sm">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filter
+                      </Button>
+                    </div>
 
-                  <TabsContent value="pending" className="space-y-4 mt-6">
-                    {tasks
-                      .filter((task) => task.status === "pending")
-                      .map((task) => (
-                        <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                {getStatusIcon(task.status)}
-                                <h3 className="font-semibold text-slate-500">{task.title}</h3>
-                                <Badge className={getPriorityColor(task.priority)}>
-                                  {task.priority === "high" && "High"}
-                                  {task.priority === "medium" && "Medium"}
-                                  {task.priority === "low" && "Low"}
-                                </Badge>
+                    <Tabs defaultValue="all" className="w-full">
+                      <TabsList className="grid w-full grid-cols-4">
+                        <TabsTrigger value="all">All</TabsTrigger>
+                        <TabsTrigger value="pending">Pending</TabsTrigger>
+                        <TabsTrigger value="in-progress">In progress</TabsTrigger>
+                        <TabsTrigger value="completed">Completed</TabsTrigger>
+                      </TabsList>
+
+                      <TabsContent value="all" className="space-y-4 mt-6">
+                        {filteredTasks.map((task) => (
+                          <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  {getStatusIcon(task.status)}
+                                  <h3 className="font-semibold text-slate-500">{task.title}</h3>
+                                  <Badge className={getPriorityColor(task.priority)}>
+                                    {task.priority === "high" && "High"}
+                                    {task.priority === "medium" && "Medium"}
+                                    {task.priority === "low" && "Low"}
+                                  </Badge>
+                                </div>
+                                <p className="text-slate-500 text-sm mb-3">{task.description}</p>
+                                <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                  <div className="flex items-center space-x-1">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>{task.dueDate}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1">
+                                    <Users className="w-4 h-4" />
+                                    <span>{task.project}</span>
+                                  </div>
+                                </div>
                               </div>
-                              <p className="text-slate-500 text-sm mb-3">{task.description}</p>
-                              <div className="flex items-center space-x-4 text-sm text-slate-500">
-                                <div className="flex items-center space-x-1">
-                                  <Calendar className="w-4 h-4" />
-                                  <span>{task.dueDate}</span>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                                  <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                        ))}
+                      </TabsContent>
+
+                      <TabsContent value="pending" className="space-y-4 mt-6">
+                        {filteredTasks
+                          .filter((task) => task.status === "pending")
+                          .map((task) => (
+                            <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-3 mb-2">
+                                    {getStatusIcon(task.status)}
+                                    <h3 className="font-semibold text-slate-500">{task.title}</h3>
+                                    <Badge className={getPriorityColor(task.priority)}>
+                                      {task.priority === "high" && "High"}
+                                      {task.priority === "medium" && "Medium"}
+                                      {task.priority === "low" && "Low"}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-slate-500 text-sm mb-3">{task.description}</p>
+                                  <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                    <div className="flex items-center space-x-1">
+                                      <Calendar className="w-4 h-4" />
+                                      <span>{task.dueDate}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <Users className="w-4 h-4" />
+                                      <span>{task.project}</span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-1">
-                                  <Users className="w-4 h-4" />
-                                  <span>{task.project}</span>
-                                </div>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                      ))}
-                  </TabsContent>
+                          ))}
+                      </TabsContent>
 
-                  <TabsContent value="in-progress" className="space-y-4 mt-6">
-                    {tasks
-                      .filter((task) => task.status === "in-progress")
-                      .map((task) => (
-                        <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                {getStatusIcon(task.status)}
-                                <h3 className="font-semibold text-slate-500">{task.title}</h3>
-                                <Badge className={getPriorityColor(task.priority)}>
-                                  {task.priority === "high" && "High"}
-                                  {task.priority === "medium" && "Medium"}
-                                  {task.priority === "low" && "Low"}
-                                </Badge>
-                              </div>
-                              <p className="text-slate-500 text-sm mb-3">{task.description}</p>
-                              <div className="flex items-center space-x-4 text-sm text-slate-500">
-                                <div className="flex items-center space-x-1">
-                                  <Calendar className="w-4 h-4" />
-                                  <span>{task.dueDate}</span>
+                      <TabsContent value="in-progress" className="space-y-4 mt-6">
+                        {filteredTasks
+                          .filter((task) => task.status === "in-progress")
+                          .map((task) => (
+                            <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-3 mb-2">
+                                    {getStatusIcon(task.status)}
+                                    <h3 className="font-semibold text-slate-500">{task.title}</h3>
+                                    <Badge className={getPriorityColor(task.priority)}>
+                                      {task.priority === "high" && "High"}
+                                      {task.priority === "medium" && "Medium"}
+                                      {task.priority === "low" && "Low"}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-slate-500 text-sm mb-3">{task.description}</p>
+                                  <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                    <div className="flex items-center space-x-1">
+                                      <Calendar className="w-4 h-4" />
+                                      <span>{task.dueDate}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <Users className="w-4 h-4" />
+                                      <span>{task.project}</span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-1">
-                                  <Users className="w-4 h-4" />
-                                  <span>{task.project}</span>
-                                </div>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                      ))}
-                  </TabsContent>
+                          ))}
+                      </TabsContent>
 
-                  <TabsContent value="completed" className="space-y-4 mt-6">
-                    {tasks
-                      .filter((task) => task.status === "completed")
-                      .map((task) => (
-                        <div
-                          key={task.id}
-                          className="border rounded-lg p-4 hover:shadow-md transition-shadow opacity-75"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-2">
-                                {getStatusIcon(task.status)}
-                                <h3 className="font-semibold text-slate-500 line-through">{task.title}</h3>
-                                <Badge className={getPriorityColor(task.priority)}>
-                                  {task.priority === "high" && "High"}
-                                  {task.priority === "medium" && "Medium"}
-                                  {task.priority === "low" && "Low"}
-                                </Badge>
-                              </div>
-                              <p className="text-slate-500 text-sm mb-3">{task.description}</p>
-                              <div className="flex items-center space-x-4 text-sm text-slate-500">
-                                <div className="flex items-center space-x-1">
-                                  <Calendar className="w-4 h-4" />
-                                  <span>{task.dueDate}</span>
+                      <TabsContent value="completed" className="space-y-4 mt-6">
+                        {filteredTasks
+                          .filter((task) => task.status === "completed")
+                          .map((task) => (
+                            <div
+                              key={task.id}
+                              className="border rounded-lg p-4 hover:shadow-md transition-shadow opacity-75"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-3 mb-2">
+                                    {getStatusIcon(task.status)}
+                                    <h3 className="font-semibold text-slate-500 line-through">{task.title}</h3>
+                                    <Badge className={getPriorityColor(task.priority)}>
+                                      {task.priority === "high" && "High"}
+                                      {task.priority === "medium" && "Medium"}
+                                      {task.priority === "low" && "Low"}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-slate-500 text-sm mb-3">{task.description}</p>
+                                  <div className="flex items-center space-x-4 text-sm text-slate-500">
+                                    <div className="flex items-center space-x-1">
+                                      <Calendar className="w-4 h-4" />
+                                      <span>{task.dueDate}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <Users className="w-4 h-4" />
+                                      <span>{task.project}</span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-1">
-                                  <Users className="w-4 h-4" />
-                                  <span>{task.project}</span>
-                                </div>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                      ))}
-                  </TabsContent>
-                </Tabs>
+                          ))}
+                      </TabsContent>
+                    </Tabs>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -623,7 +618,10 @@ export default function AccountPage() {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start maxter-bg">
+                <Button 
+                  className="w-full justify-start maxter-bg"
+                  onClick={() => setIsCreateTaskOpen(true)}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create a task
                 </Button>
