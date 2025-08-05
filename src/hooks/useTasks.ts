@@ -4,7 +4,8 @@ import * as taskApi from "@/lib/tasks/client";
 export const useTasks = () => {
   return useQuery({
     queryKey: ["tasks"],
-    queryFn: taskApi.getTasks
+    queryFn: taskApi.getTasks,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
