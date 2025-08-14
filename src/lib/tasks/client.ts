@@ -39,6 +39,7 @@ export const getTasks = async () => {
   return res.data;
 };
 
+
 export const deleteTask = async (id: string) => {
   const res = await axiosInstance.delete(`/tasks/${id}`);
   return res.data;
