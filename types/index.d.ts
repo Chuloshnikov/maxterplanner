@@ -50,4 +50,15 @@ interface Comment {
   }
 
   
-  
+  interface TaskTypes {
+  id: string;
+  title: string;
+  description: string;
+  status: 'pending' | 'in-progress' | 'completed';
+  priority: 'low' | 'medium' | 'high';
+  project: string;
+  userId: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  dueDate: string;   // ISO date string
+};

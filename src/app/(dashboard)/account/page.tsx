@@ -30,7 +30,6 @@ import {
 import {
   Plus,
   Search,
-  Filter,
   Calendar,
   CheckCircle2,
   Clock,
@@ -53,19 +52,14 @@ export default function AccountPage() {
   const { data: authUser, isLoading, isError } = useAuthUser();
   const createTaskMutation = useCreateTask();
   const { data: tasks = [], isLoading: tasksLoading, refetch } = useTasks();
+  console.log(tasks);
   
   const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
-  // Фильтруем задачи по текущему пользователю
   useEffect(() => {
-    if (authUser && tasks.length > 0) {
-      const userTasks = tasks.filter(task => task.userId === authUser.id);
-      setFilteredTasks(userTasks);
-    } else {
-      setFilteredTasks([]);
-    }
-  }, [tasks, authUser]);
+      setFilteredTasks(tasks);
+  }, [tasks]);
 
   // Статистика задач
   const completedTasks = filteredTasks.filter(task => task.status === "completed").length;
@@ -264,12 +258,12 @@ export default function AccountPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>My tasks</CardTitle>
-                    <CardDescription>Manage your tasks and projects</CardDescription>
+                    <CardDescription className="text-xs md:text-base">Manage your tasks and projects</CardDescription>
                   </div>
                   <Dialog open={isCreateTaskOpen} onOpenChange={setIsCreateTaskOpen}>
                     <DialogTrigger asChild>
                       <Button className="maxter-bg">
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="hidden md:inline w-4 h-4 mr-2" />
                         New task
                       </Button>
                     </DialogTrigger>
@@ -405,14 +399,10 @@ export default function AccountPage() {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <Input placeholder="Search tasks..." className="pl-10" />
                       </div>
-                      <Button variant="outline" size="sm">
-                        <Filter className="w-4 h-4 mr-2" />
-                        Filter
-                      </Button>
                     </div>
 
-                    <Tabs defaultValue="all" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4">
+                    <Tabs defaultValue="all" className="w-full max-h-max">
+                      <TabsList className="w-full flex">
                         <TabsTrigger value="all">All</TabsTrigger>
                         <TabsTrigger value="pending">Pending</TabsTrigger>
                         <TabsTrigger value="in-progress">In progress</TabsTrigger>
@@ -612,30 +602,6 @@ export default function AccountPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  className="w-full justify-start maxter-bg"
-                  onClick={() => setIsCreateTaskOpen(true)}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create a task
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Schedule a meeting
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Users className="w-4 h-4 mr-2" />
-                  Invite to the team
-                </Button>
-              </CardContent>
-            </Card>
-
             {/* Recent Activity */}
             <Card>
               <CardHeader>
@@ -674,7 +640,7 @@ export default function AccountPage() {
                 <CardTitle className="text-lg">Upcoming deadlines</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="lg:space-y-3">
                   <div className="flex items-center justify-between p-3 rounded-lg border border-red-100">
                     <div>
                       <p className="text-sm font-medium text-slate-500">Code review</p>
